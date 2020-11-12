@@ -1,48 +1,54 @@
 def meetUser():
     print("This program help you find the maximum element of the array(array type n*n ) and its index")
-    print("limit for n:  1 >= n <= 5\n")
+    print("limit for n:  1 >= n <= 5")
     return 1
 
-def sizeArr(n):
+def sizeMatrix(n):
     if (n >= 1 and n <= 5):
-        n = n * n
         return n
     else:
-        print("limit for n:  1 >= n <= 5\n")
+        print("limit for n:  1 >= n <= 5")
         return 1
 
-
-def maxIndex(arr, sizeArr):
-    if sizeArr == 0:
-        return 0
+def inputMatrix(sizeMatrix, matrix=[], arr=[], i=0, j=0):
+    if i == sizeMatrix:
+        return matrix
     else:
-        i = maxIndex(arr, sizeArr - 1)
-        if arr[i] > arr[sizeArr - 1]:
-            return i
-        return sizeArr - 1
+        if j == sizeMatrix:
+            matrix.append(arr)
+            arr = []
+            return inputMatrix(sizeMatrix, matrix, arr, i + 1, j=0)
+        else:
+            num = int(input(f"Input value for element matrix [row: {i} column: {j}]: "))
+            arr.append(num)
+    return inputMatrix(sizeMatrix, matrix, arr, i, j + 1)
 
+def outputMatrix(matrix, sizeMatrix, i=0, j=0, stop=''):
+    if i == sizeMatrix:
+        return stop
+    else:
+        if j < sizeMatrix:
+            print(matrix[i][j], end=' ')
+            return outputMatrix(matrix, sizeMatrix, i, j + 1)
+        else:
+            print()
+            return outputMatrix(matrix, sizeMatrix, i + 1, j=0)
 
-def inptArr(i, sizeArr, arr):
-    if i == sizeArr:
-        return arr
-    k = int(input(f"nenter your num for element under the index {i}: "))
-    arr.append(k)
-    return inptArr(i + 1, sizeArr, arr)
-
-
-def outputMaxArr(indexMax, arr):
-    print(f"\nMax element: {arr[indexMax]}\nYour array under the index: {indexMax} ")
-    return 1
-
+def findMax(matrix, sizeMatrix, maxElem=0, maxRow=0, maxColumn=0, i=0, j=0):
+    if i == sizeMatrix:
+        return maxElem, maxRow, maxColumn
+    else:
+        if j == sizeMatrix:
+            return findMax(matrix, sizeMatrix, maxElem, maxRow, maxColumn, i + 1, j=0)
+        else:
+            if matrix[i][j] > maxElem:
+                maxElem = matrix[i][j]
+                maxRow = i
+                maxColumn = j
+            return findMax(matrix, sizeMatrix, maxElem, maxRow, maxColumn, i, j + 1)
 
 meetUser()
-
-arr = []
-size = int(input("enter your n: "))
-size = sizeArr(size)
-
-arr = inptArr(0, size, arr)
-
-indexMax = maxIndex(arr, size)
-
-outputMaxArr(indexMax, arr)
+size = sizeMatrix(int(input("enter your n: \n")))
+matrix = inputMatrix(size)
+maxElemIndex, maxRowIndex, maxColumnIndex = findMax(matrix, size)
+print(f"\nMax element: {matrix[maxRowIndex][maxColumnIndex]}. His row index: {maxRowIndex} column index: {maxColumnIndex}")
